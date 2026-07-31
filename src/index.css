@@ -1,0 +1,121 @@
+@import "tailwindcss";
+@import "tw-animate-css"; /* shadcn 애니메이션 유틸 — 미설치 시 `npm i tw-animate-css` */
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+  디자인 토큰 = DESIGN.md(Linear · 다크 캔버스)를 shadcn 변수에 매핑한 구현.
+  DESIGN.md가 canonical spec, 이 파일이 canonical implementation.
+  앱은 DESIGN.md 방침에 따라 다크 전용 → :root 자체가 다크 테마.
+*/
+:root {
+  color-scheme: dark;
+
+  /* 반경: buttons/inputs(rounded-md)이 정확히 DESIGN md(8px)에 오도록 base 10px */
+  --radius: 0.625rem;
+
+  /* ── shadcn 시맨틱 토큰 (프리미티브가 참조) ───────────────── */
+  --background: #010102;         /* canvas */
+  --foreground: #f7f8f8;         /* ink */
+  --card: #0f1011;               /* surface-1 */
+  --card-foreground: #f7f8f8;    /* ink */
+  --popover: #141516;            /* surface-2 */
+  --popover-foreground: #f7f8f8; /* ink */
+  --primary: #5e6ad2;            /* lavender-blue */
+  --primary-foreground: #ffffff; /* on-primary */
+  --secondary: #0f1011;          /* surface-1 (button-secondary) */
+  --secondary-foreground: #f7f8f8;
+  --muted: #141516;              /* surface-2 */
+  --muted-foreground: #8a8f98;   /* ink-subtle */
+  --accent: #141516;             /* surface-2 (hover/selected lift) */
+  --accent-foreground: #f7f8f8;
+  --destructive: #e5484d;        /* DESIGN에 없어 추가(Known Gaps: error 미정의) */
+  --destructive-foreground: #ffffff;
+  --border: #23252a;             /* hairline */
+  --input: #23252a;              /* hairline */
+  --ring: #5e69d1;               /* primary-focus */
+
+  /* ── Linear 확장 토큰 (shadcn 기본 세트 밖) ───────────────── */
+  --canvas: #010102;
+  --surface-1: #0f1011;
+  --surface-2: #141516;
+  --surface-3: #18191a;
+  --surface-4: #191a1b;
+  --hairline: #23252a;
+  --hairline-strong: #34343a;
+  --hairline-tertiary: #3e3e44;
+  --ink: #f7f8f8;
+  --ink-muted: #d0d6e0;
+  --ink-subtle: #8a8f98;
+  --ink-tertiary: #62666d;
+  --primary-hover: #828fff;
+  --primary-focus: #5e69d1;
+  --success: #27a644;
+
+  /* ── 폰트 (Linear 커스텀은 비공개 → Inter/JetBrains Mono 대체) ── */
+  --font-sans: "Inter", "SF Pro Display", -apple-system, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* 다크 전용: .dark 토글이 라이트로 뒤집히지 않도록 :root 값을 그대로 상속 */
+.dark {
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Linear 확장 토큰 → Tailwind 유틸 (bg-surface-2, text-ink-subtle, border-hairline …) */
+  --color-canvas: var(--canvas);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+  --color-hairline: var(--hairline);
+  --color-hairline-strong: var(--hairline-strong);
+  --color-hairline-tertiary: var(--hairline-tertiary);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-ink-tertiary: var(--ink-tertiary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-focus: var(--primary-focus);
+  --color-success: var(--success);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    letter-spacing: -0.011em; /* DESIGN body 트래킹(-0.05px@16px 근사) */
+  }
+}
