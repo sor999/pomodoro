@@ -1,16 +1,17 @@
+import { useState } from 'react'
 import { Timer } from 'lucide-react'
 
+import { AppTabs, type AppTab } from '@/features/app-shell/AppTabs'
+import { StatsView } from '@/features/app-shell/StatsView'
+import { TimerView } from '@/features/app-shell/TimerView'
 import { NotificationBanner } from '@/features/notifications/NotificationBanner'
 import { useSessionNotification } from '@/features/notifications/useSessionNotification'
-import { DurationSettings } from '@/features/settings/DurationSettings'
-import { SessionList } from '@/features/sessions/SessionList'
-import { StatsPanel } from '@/features/stats/StatsPanel'
-import { TimerCard } from '@/features/timer/TimerCard'
 import { useTimerRuntime } from '@/features/timer/useTimerRuntime'
 
 function App() {
   const notification = useSessionNotification()
   useTimerRuntime(notification.notify)
+  const [activeTab, setActiveTab] = useState<AppTab>('timer')
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col gap-8 px-4 py-10 sm:px-6">
@@ -24,6 +25,8 @@ function App() {
         </p>
       </header>
 
+      <AppTabs value={activeTab} onValueChange={setActiveTab} />
+
       {notification.banner !== null && (
         <NotificationBanner
           notice={notification.banner}
@@ -31,14 +34,15 @@ function App() {
         />
       )}
 
-      <TimerCard onRequestPermission={notification.requestPermission} />
-
-      <StatsPanel />
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <DurationSettings />
-        <SessionList />
-      </div>
+      {activeTab === 'timer' ? (
+        <div id="panel-timer" role="tabpanel" aria-labelledby="tab-timer" tabIndex={0}>
+          <TimerView onRequestPermission={notification.requestPermission} />
+        </div>
+      ) : (
+        <div id="panel-stats" role="tabpanel" aria-labelledby="tab-stats" tabIndex={0}>
+          <StatsView />
+        </div>
+      )}
     </main>
   )
 }
